@@ -1,0 +1,270 @@
+body,
+html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #1a202c;
+    /* Fundo principal escuro */
+    color: #e2e8f0;
+    /* Texto claro */
+}
+
+.flex {
+    display: flex;
+}
+
+.h-screen {
+    height: 100vh;
+}
+
+.w-80 {
+    width: 20rem;
+}
+
+.bg-gray-100 {
+    background-color: #2d3748;
+    /* Cor de fundo para a sidebar */
+}
+
+.bg-white {
+    background-color: #2d3748;
+    /* Cor de fundo para os elementos internos da sidebar */
+}
+
+.border {
+    border: 1px solid #4a5568;
+    /* Borda mais escura */
+}
+
+.border-gray-300 {
+    border-color: #4a5568;
+}
+
+.p-4 {
+    padding: 1rem;
+}
+
+.overflow-y-auto {
+    overflow-y: auto;
+}
+
+.mb-6 {
+    margin-bottom: 1.5rem;
+}
+
+.mb-2 {
+    margin-bottom: 0.5rem;
+}
+
+.text-lg {
+    font-size: 1.125rem;
+}
+
+.font-bold {
+    font-weight: bold;
+}
+
+.font-semibold {
+    font-weight: 600;
+}
+
+.text-sm {
+    font-size: 0.875rem;
+}
+
+.w-full {
+    width: 100%;
+}
+
+.p-2 {
+    padding: 0.5rem;
+}
+
+.p-1 {
+    padding: 0.25rem;
+}
+
+.rounded {
+    border-radius: 0.25rem;
+}
+
+.grid {
+    display: grid;
+}
+
+.grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.gap-2 {
+    gap: 0.5rem;
+}
+
+/* Cores dos botões e seus hovers */
+.bg-blue-500 {
+    background-color: #63b3ed;
+    /* Azul claro para botões de ação */
+    color: #1a202c;
+    /* Texto escuro no botão claro */
+}
+
+.hover\:bg-blue-600:hover {
+    background-color: #4299e1;
+}
+
+.bg-green-500 {
+    background-color: #48bb78;
+    /* Verde para adicionar */
+    color: #1a202c;
+}
+
+.hover\:bg-green-600:hover {
+    background-color: #38a169;
+}
+
+.bg-purple-500 {
+    background-color: #a78bfa;
+    /* Roxo para exportar */
+    color: #1a202c;
+}
+
+.hover\:bg-purple-600:hover {
+    background-color: #8b5cf6;
+}
+
+.bg-red-500 {
+    background-color: #fc8181;
+    /* Vermelho claro para borracha */
+    color: #1a202c;
+}
+
+.hover\:bg-red-600:hover {
+    background-color: #e53e3e;
+}
+
+.bg-red-700 {
+    /* Cor para o botão de borracha ativado */
+    background-color: #c53030;
+    color: #fff;
+}
+
+
+.text-white {
+    color: #e2e8f0;
+    /* Texto claro padrão, mas sobrescrito em botões */
+}
+
+.space-y-1>*+* {
+    margin-top: 0.25rem;
+}
+
+.inline-block {
+    display: inline-block;
+}
+
+.cursor-crosshair {
+    cursor: crosshair;
+}
+
+/* Estilos para a lista de camadas */
+.bg-blue-100 {
+    background-color: #2b6cb0;
+    /* Fundo para camada ativa */
+    border-color: #3182ce;
+    color: #e2e8f0;
+}
+
+.border-blue-300 {
+    border-color: #3182ce;
+}
+
+.text-green-600 {
+    color: #68d391;
+    /* Ícone de visibilidade verde */
+}
+
+.text-gray-400 {
+    color: #a0aec0;
+    /* Ícone de visibilidade cinza */
+}
+
+.text-red-600 {
+    color: #fc8181;
+    /* Ícone de lixeira vermelho */
+}
+
+.bg-gray-50 {
+    background-color: #4a5568;
+    /* Fundo para camadas inativas */
+    color: #e2e8f0;
+}
+
+.text-primary {
+    color: #e2e8f0;
+    /* Cor primária de texto */
+}
+
+/* Input fields */
+input[type="text"],
+input[type="number"],
+input[type="file"] {
+    background-color: #4a5568;
+    /* Fundo do input */
+    color: #e2e8f0;
+    /* Texto do input */
+    border: 1px solid #636b77;
+    /* Borda do input */
+}
+
+input::placeholder {
+    color: #a0aec0;
+    /* Cor do placeholder */
+}
+
+/* Canvas de tileset e mapa */
+#tileset-canvas,
+#map-canvas {
+    border: 1px solid #4a5568;
+    /* Borda escura para os canvases */
+    background-color: #1a202c;
+    /* Fundo escuro para o canvas do mapa */
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .flex {
+        flex-direction: column;
+        /* Empilha a barra lateral e o mapa */
+    }
+
+    .w-80 {
+        width: 100%;
+        /* Barra lateral ocupa toda a largura */
+    }
+
+    .overflow-y-auto {
+        max-height: 50vh;
+        /* Limita a altura da barra lateral em telas pequenas */
+    }
+}
+
+/* Scrollbar styling for dark theme */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #2d3748;
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #636b77;
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #718096;
+}

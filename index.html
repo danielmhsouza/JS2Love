@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Love2D JS Engine</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: #000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      font-family: Arial, sans-serif;
+    }
+    
+    canvas {
+      border: 1px solid #333;
+      background: #000;
+    }
+    
+    .info {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      color: white;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="info">
+    <div>JS2Love</div>
+    <div>FPS: <span id="fps">0</span></div>
+  </div>
+  <canvas id="gameCanvas"></canvas>
+  
+  <script src="love.js"></script>
+  <script src="anim.js"></script>
+  <script src="physics2.js"></script>
+  <script src="particles.js"></script>
+  <!-- <script src="main.js"></script> -->
+  <script src="testes.js"></script>
+</body>
+</html>
