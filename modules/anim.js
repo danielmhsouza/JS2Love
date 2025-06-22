@@ -1,6 +1,6 @@
 // anim.js — Sistema de animações estilo anim8
 
-const anim = (function () {
+export const anim = (function () {
     function newGrid(frameWidth, frameHeight, imageWidth, imageHeight) {
         const cols = Math.floor(imageWidth / frameWidth);
         const rows = Math.floor(imageHeight / frameHeight);

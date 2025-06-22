@@ -1,6 +1,6 @@
 // physics.js — Módulo de física leve estilo Love2D com tipos e respostas de colisão
 
-const physics = (function () {
+export const physics = (function () {
     const bodies = [];
     /**
      * Cria um novo corpo físico.

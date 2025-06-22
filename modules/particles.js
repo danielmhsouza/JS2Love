@@ -1,6 +1,6 @@
 // particles.js — Sistema modular de partículas
 
-const particles = (function () {
+export const particles = (function () {
     const emitters = [];
 
     function newEmitter(config) {

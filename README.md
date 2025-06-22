@@ -229,6 +229,32 @@ window.love.draw = function() {
 
 <small> <b>OBS: </b> Algumas funcionalidades do módulo de física ainda estão sendo desenvolvidas, mas o básico funciona perfeitamente! </small>
 
+## tilemap.js
+- `tilemap.load(tilesetPath, mapJsonPath, callback)` - Carrega um mapa a partir de um tileset e um json
+- `tilemap.getColliders()` - Retorna todos os objetos com física (estáticos)
+
+Código de exemplo:
+
+``` javascript
+window.love.load = function() {
+    tilemap.load('./maps/1.png', './maps/1.json', () => {
+        console.log('Mapa carregado!');
+    });
+}
+
+window.love.update = function(dt) {
+    for (const col of tilemap.getColliders()) {
+        if (physics.checkCollision(player, col)) {
+            physics.handleCollisionResponse(player, col);
+        }
+    }
+}
+
+window.love.draw = function(){
+    tilemap.draw()
+}
+```
+
 <br>
 ---
 
