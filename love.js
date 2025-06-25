@@ -3,8 +3,8 @@ class Love2D {
   constructor() {
     this.canvas = null;
     this.ctx = null;
-    this.width = 800;
-    this.height = 600;
+    this.width = 640;
+    this.height = 320;
     this.dt = 0;
     this.lastTime = 0;
     this.fps = 0;
@@ -302,7 +302,11 @@ const love = {
   keyboard: {
     isDown: function (key) {
       return !!engine.keys[key.toLowerCase()];
-    }
+    },
+    
+    isRelease: function (key) {
+      return !!engine.keys[key.toLowerCase()];
+    },
   },
 
   // Mouse module

@@ -2,6 +2,7 @@
 
 **JS2Love** é uma engine 2D feita em JavaScript que recria as principais funcionalidades da **Love2D** (Lua), proporcionando uma experiência familiar para desenvolvedores que desejam criar jogos 2D diretamente no navegador com uma API semelhante.
 
+TODO: atualizar funções de physics.js e adicionar behaviors
 ---
 
 ## 🚀 Principais Funcionalidades
@@ -159,8 +160,6 @@ window.love.draw = function() {
 
 - `physics.newBody({ x = 0, y = 0, width = 0, height = 0, radius = 0, shape = 'rectangle', type = 'dynamic', gravity = true, friction = 0.95, pushFactor = 0.3, vertices = null })` - Cria um corpo que responde à física
 o parâmetro `shape` pode ser `'static'`, `'dynamic'`, `'pushable'` ou `'sensor'`.
-- `physics.checkCollision(a, b)` - Verifica se houve colisão entre dois objetos
-- `physics.handleCollisionResponse(a, b)` - Lida com a colisão entre dois objetos
 ```
 * Se um corpo é sensor, não há resposta. Se um corpo é dinâmico e o outro é estático, para o corpo dinâmico.
 * Se um corpo é dinâmico e o outro é empurrável, transfere a velocidade do corpo dinâmico para o empurrável.

@@ -11,12 +11,12 @@ export const tilemap = (function () {
     let layers = [];
     let colliders = [];
 
-    function load(tilesetPath, mapJsonPath, callback) {
+    async function load(tilesetPath, mapJsonPath, callback) {
         // Carrega imagem dos tiles
         tilesetImage = love.graphics.newImage(tilesetPath);
 
         // Carrega JSON do mapa
-        fetch(mapJsonPath)
+        await fetch(mapJsonPath)
             .then(res => res.json())
             .then(map => {
                 tileWidth = map.tilewidth;
