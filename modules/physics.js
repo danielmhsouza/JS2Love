@@ -18,7 +18,7 @@ export const physics = (function () {
         shape = 'rectangle', type = 'dynamic', gravity = true,
         friction = 0.1, restitution = 0.1, density = 0.001,
         pushFactor = 0.3, vertices = null,
-        isSensor = false, canRotate = false
+        isSensor = false, canRotate = false, shadowBlock = true
     }) {
         let matterBody;
         const isStatic = (type === 'static' || type === 'sensor');
@@ -49,7 +49,7 @@ export const physics = (function () {
 
         matterBody.customData = {
             type,
-            gravity,
+            gravityEnabled: gravity,
             pushFactor,
             grounded: false,
             drawInfo: { x, y, width, height, radius, shape },
@@ -77,7 +77,8 @@ export const physics = (function () {
             friction,
             pushFactor,
             mass: matterBody.mass,
-            vertices
+            vertices,
+            shadowBlock
         };
 
         bodies.push(body);
@@ -86,18 +87,27 @@ export const physics = (function () {
 
     function update(dt) {
         Matter.Engine.update(engine, dt * 1000);
+
+        const gX = world.gravity.x * world.gravity.scale;
+        const gY = world.gravity.y * world.gravity.scale;
+
+        for (const b of bodies) {
+            if (!b.matterBody.customData.gravityEnabled && !b.matterBody.isStatic) {
+                // força contrária:  F = −m·g
+                Matter.Body.applyForce(
+                    b.matterBody,
+                    b.matterBody.position,
+                    { x: -gX * b.matterBody.mass, y: -gY * b.matterBody.mass }
+                );
+            }
+        }
     }
 
+
     function setGravity(body, enabled) {
-        if (!enabled) {
-            Matter.Body.applyForce(body.matterBody, body.matterBody.position, {
-                x: -world.gravity.x * body.matterBody.mass,
-                y: -world.gravity.y * body.matterBody.mass
-            });
-        }
-        // Você também pode armazenar esse estado, se quiser resetar depois
-        body.gravity = enabled;
+        body.matterBody.customData.gravityEnabled = enabled;
     }
+
 
     function setupCollisionEvents() {
         Matter.Events.on(engine, 'collisionStart', (event) => {
@@ -135,11 +145,32 @@ export const physics = (function () {
         });
     }
 
+    function getShadowObstacles() {
+        return bodies
+            .filter(b => b.shadowBlock)
+            .map(b => {
+                if (b.shape === "circle") {
+                    return { shape: "circle", cx: b.x + b.radius, cy: b.y + b.radius, r: b.radius };
+                }
+                // rectangle como antes
+                return {
+                    shape: "polygon",
+                    vertices: [
+                        { x: b.x, y: b.y },
+                        { x: b.x + b.width, y: b.y },
+                        { x: b.x + b.width, y: b.y + b.height },
+                        { x: b.x, y: b.y + b.height }
+                    ]
+                };
+            });
+    }
+
+
     function checkCollision(a, b) {
         if (!a?.matterBody || !b?.matterBody) return false;
-        const result = Matter.SAT.collides(a.matterBody, b.matterBody);
+        const result = Matter.Collision.collides(a.matterBody, b.matterBody);
         if (result) return result.collided;
-        return 
+        return
     }
 
     return {
@@ -148,6 +179,7 @@ export const physics = (function () {
         update,
         setGravity,
         getBodies: () => bodies,
-        checkCollision
+        checkCollision,
+        getShadowObstacles
     };
 })();

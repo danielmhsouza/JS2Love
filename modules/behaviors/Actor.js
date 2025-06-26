@@ -13,7 +13,8 @@ class Actor {
             shape: 'rectangle',
             type: 'dynamic',
             gravity: true,
-            canRotate: canRotate
+            canRotate: canRotate,
+            shadowBlock: true
         });
 
         if (spritePath) {
@@ -45,8 +46,19 @@ class Actor {
     }
 
     move4Directions(dt, speed) {
-        const vx = (love.keyboard.isDown("a") ? -speed : love.keyboard.isDown("d") ? speed : 0);
-        const vy = (love.keyboard.isDown("w") ? -speed : love.keyboard.isDown("s") ? speed : 0);
+        let vx = 0;
+        let vy = 0;
+
+        if (love.keyboard.isDown("a")) {
+            vx = -speed;
+        } else if (love.keyboard.isDown("d")) {
+            vx = speed;
+        } else if (love.keyboard.isDown("w")) {
+            vy = -speed;
+        } else if (love.keyboard.isDown("s")) {
+            vy = speed;
+        }
+
         Matter.Body.setVelocity(this.body.matterBody, { x: vx * dt, y: vy * dt });
     }
 
@@ -149,7 +161,7 @@ class Actor {
             love.graphics.setColor(255, 255, 255);
             love.graphics.rectangle('fill', this.body.x, this.body.y, this.body.width, this.body.height);
         }
-        
+
     }
 }
 
