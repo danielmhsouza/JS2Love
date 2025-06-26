@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,12 +16,12 @@
       min-height: 100vh;
       font-family: Arial, sans-serif;
     }
-    
+
     canvas {
       border: 1px solid #333;
       background: #000;
     }
-    
+
     .info {
       position: absolute;
       top: 10px;
@@ -30,15 +31,23 @@
     }
   </style>
 </head>
+
 <body>
   <div class="info">
     <div>JS2Love</div>
     <div>FPS: <span id="fps">0</span></div>
   </div>
   <canvas id="gameCanvas"></canvas>
+
+  <script>
+    window.CANVAS_WIDTH = 640;
+    window.CANVAS_HEIGHT = 320;
+    window.PIXELED = true;
+  </script>
   
   <script src="modules/metter.min.js"></script>
   <script src="love.js"></script>
   <script type="module" src="exemple2.js"></script>
 </body>
+
 </html>

@@ -1,10 +1,10 @@
 // Love2D JavaScript Engine
 class Love2D {
-  constructor() {
+  constructor(width = 640, height = 320) {
     this.canvas = null;
     this.ctx = null;
-    this.width = 640;
-    this.height = 320;
+    this.width = width;
+    this.height = height;
     this.dt = 0;
     this.lastTime = 0;
     this.fps = 0;
@@ -42,7 +42,12 @@ class Love2D {
     this.ctx = this.canvas.getContext('2d');
     this.canvas.width = this.width;
     this.canvas.height = this.height;
-
+    if (window.PIXELED) {
+      this.ctx.imageSmoothingEnabled = false;
+      this.ctx.webkitImageSmoothingEnabled = false;
+      this.ctx.mozImageSmoothingEnabled = false;
+      this.ctx.msImageSmoothingEnabled = false;
+    }
     // Initialize audio context
     try {
       this.audio.context = new (window.AudioContext || window.webkitAudioContext)();
@@ -303,7 +308,7 @@ const love = {
     isDown: function (key) {
       return !!engine.keys[key.toLowerCase()];
     },
-    
+
     isRelease: function (key) {
       return !!engine.keys[key.toLowerCase()];
     },
@@ -411,7 +416,7 @@ const love = {
 };
 
 // Initialize engine
-const engine = new Love2D();
+const engine = new Love2D(window.CANVAS_WIDTH || 640, window.CANVAS_HEIGHT || 320);
 
 // Export love object to global scope
 window.love = window.love || {};

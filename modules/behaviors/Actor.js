@@ -19,7 +19,6 @@ class Actor {
 
         if (spritePath) {
             this.animConfig = animConfig || {
-                frame: { x: 0, y: 0, w: 32, h: 32 },
                 grid: { fw: 32, fh: 32 },
                 anims: {
                     idle: { cols: '1-6', row: 1, vel: 0.1 },
@@ -28,6 +27,7 @@ class Actor {
             };
 
             this.sprite = love.graphics.newImage(spritePath);
+
             this.grid = anim.newGrid(
                 this.animConfig.grid.fw,
                 this.animConfig.grid.fh,
@@ -35,9 +35,8 @@ class Actor {
                 this.sprite.height
             );
 
-            const idle = this.animConfig.anims.idle;
-            this.animFrame = this.grid(idle.cols, idle.row);
-            this.animation = anim.newAnimation(this.animFrame, idle.vel);
+            this.animFrame = this.grid(this.animConfig.anims.idle.cols, this.animConfig.anims.idle.row);
+            this.animation = anim.newAnimation(this.animFrame, this.animConfig.anims.idle.vel);
         }
     }
 
@@ -118,7 +117,9 @@ class Actor {
     }
 
     animUpdate(dt) {
-        if (this.animation) this.animation.update(dt);
+        if (this.animation) {
+            this.animation.update(dt);
+        }
     }
 
     changeAnim(name) {
@@ -150,10 +151,10 @@ class Actor {
             this.animation.draw(
                 this.sprite,
                 this.body.matterBody.position.x,
-                this.body.matterBody.position.y,
+                this.body.matterBody.position.y - fh,
                 angle, // aplica rotação real
-                scaleX,
-                scaleY,
+                scaleX + 2 * (this.flip ? -1 : 1),
+                scaleY + 2,
                 this.animConfig.grid.fw / 2,
                 this.animConfig.grid.fh / 2
             );
