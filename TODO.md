@@ -28,12 +28,13 @@ Flash de dano (piscar branco/vermelho)
 Dissolve/fade
 Outline/glow
 Color grading
-6. UI System
+6. UI System ✅
 
-Botões, sliders, checkboxes
-Health bars, stamina bars
-Dialog boxes
-Inventário
+Botões (styled ou com imagens)
+Checkboxes, Sliders
+Labels, Panels, Progress Bars
+Hover/click states, callbacks
+Estilos customizáveis (cores, borders, radius)
 🔊 Áudio
 7. Sistema de Áudio Avançado
 

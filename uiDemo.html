@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JS2Love - UI System Demo</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: #000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      font-family: Arial, sans-serif;
+    }
+
+    canvas {
+      border: 1px solid #333;
+      background: #000;
+    }
+
+    .info {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      color: white;
+      font-size: 14px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="info">
+    <div>JS2Love - UI System Demo</div>
+    <div>FPS: <span id="fps">0</span></div>
+  </div>
+  <canvas id="gameCanvas"></canvas>
+
+  <script>
+    window.CANVAS_WIDTH = 640;
+    window.CANVAS_HEIGHT = 520;
+    window.PIXELED = false;
+  </script>
+  
+  <script src="./JS2Love/modules/metter.min.js"></script>
+  <script src="./JS2Love/love.js"></script>
+  <script type="module" src="exempleUI.js"></script>
+</body>
+
+</html>
