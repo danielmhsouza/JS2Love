@@ -60,13 +60,18 @@ Transições condicionais
 11. Save System
 
 LocalStorage/IndexedDB
-Serialização automática de estado
+Serialização automática de estado do jogo
 Múltiplos slots de save
-12. Configurações
+12. Configurações ✅ (melhorar)
 
-Volume, controles, fullscreen
-Persistir preferências
+Volume por categoria (master, música, SFX, voz)
+Fullscreen toggle
+Persistência automática (LocalStorage)
+Export/Import de configurações
+Key mapping customizável
+Callbacks de mudança
 ⚡ Otimização
+
 13. Object Pooling
 
 Reutilizar balas, partículas, inimigos
