@@ -86,7 +86,12 @@ export const physics = (function () {
     }
 
     function update(dt) {
-        Matter.Engine.update(engine, dt * 1000);
+        // Limita o delta time para evitar warnings do Matter.js
+        // Máximo recomendado: 16.667ms (1/60 segundo)
+        const maxDelta = 0.0167; // 16.67ms em segundos
+        const clampedDt = Math.min(dt, maxDelta);
+        
+        Matter.Engine.update(engine, clampedDt * 1000);
 
         const gX = world.gravity.x * world.gravity.scale;
         const gY = world.gravity.y * world.gravity.scale;
