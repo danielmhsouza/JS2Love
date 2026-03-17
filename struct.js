@@ -1,5 +1,5 @@
 //optional modules
-import { physics } from './modules/physics2.js';
+import { physics } from './modules/physics.js';
 import { anim } from './modules/anim.js';
 import { particles } from './modules/particles.js';
 import { tilemap } from './modules/tilemap.js';

@@ -3,7 +3,7 @@
 
 import { physics } from "./physics.js";
 
-export const lightShadow = (function () {
+export const dynamicLight = (function () {
     const lights = [];
 
     /**
@@ -36,7 +36,8 @@ export const lightShadow = (function () {
             flicker,
             flickerStrength,
             resolution,
-            showRays
+            showRays,
+            enabled: true
         };
         lights.push(l);
         return l;
@@ -44,6 +45,8 @@ export const lightShadow = (function () {
 
     function update(dt) {
         for (const l of lights) {
+            if (!l.enabled) continue;
+            
             if (l.flicker) {
                 const varr = (Math.random() * 2 - 1) * l.flickerStrength * l.baseRadius;
                 l.radius = l.baseRadius + varr;
@@ -53,24 +56,99 @@ export const lightShadow = (function () {
         }
     }
 
-    function draw() {
+    /**
+     * Desenha as luzes com sombras. Pode receber um ou dois contextos:
+     * - Se receber 1 contexto: desenha só nele (comportamento antigo)
+     * - Se receber shadowCtx e colorCtx: desenha em ambos (novo sistema)
+     */
+    function draw(shadowCtx, colorCtx) {
         const obstacles = physics.getShadowObstacles?.() || [];
-
+        
+        // Compatibilidade: se passar só 1 argumento, usa o antigo comportamento
+        if (!colorCtx && shadowCtx) {
+            drawSingleContext(shadowCtx, obstacles);
+            return;
+        }
+        
+        // Novo sistema: desenha em ambos os canvas
         for (const l of lights) {
-            const rays = buildRayPolygon(l, obstacles);
+            if (!l.enabled) continue;
 
-            // polígono iluminado
-            love.graphics.setColor(l.color.r, l.color.g, l.color.b, l.color.a * 255);
-            love.graphics.polygon("fill", rays.flatMap(p => [p.x, p.y]));
+            const rays = buildRayPolygon(l, obstacles);
+            if (rays.length < 3) continue;
+
+            const flatRays = rays.flatMap(p => [p.x, p.y]);
+            if (flatRays.length < 6) continue;
+
+            // CAMADA 1: Máscara de sombra (branco = remove escuridão)
+            if (shadowCtx) {
+                shadowCtx.fillStyle = `rgba(255, 255, 255, 1)`;
+                shadowCtx.beginPath();
+                shadowCtx.moveTo(flatRays[0], flatRays[1]);
+                for (let i = 2; i < flatRays.length; i += 2) {
+                    shadowCtx.lineTo(flatRays[i], flatRays[i + 1]);
+                }
+                shadowCtx.closePath();
+                shadowCtx.fill();
+            }
+
+            // CAMADA 2: Cor da luz (adiciona cor)
+            if (colorCtx) {
+                colorCtx.fillStyle = `rgba(${l.color.r}, ${l.color.g}, ${l.color.b}, ${l.color.a})`;
+                colorCtx.beginPath();
+                colorCtx.moveTo(flatRays[0], flatRays[1]);
+                for (let i = 2; i < flatRays.length; i += 2) {
+                    colorCtx.lineTo(flatRays[i], flatRays[i + 1]);
+                }
+                colorCtx.closePath();
+                colorCtx.fill();
+            }
 
             // opcional: linhas dos raios p/ debug
-            if (l.showRays) {
-                love.graphics.setLineWidth(1);
-                love.graphics.setColor(l.color.r, l.color.g, l.color.b, 120);
-                for (const p of rays) love.graphics.line(l.x, l.y, p.x, p.y);
+            if (l.showRays && colorCtx) {
+                colorCtx.strokeStyle = `rgba(${l.color.r}, ${l.color.g}, ${l.color.b}, 0.47)`;
+                colorCtx.lineWidth = 1;
+                for (const p of rays) {
+                    colorCtx.beginPath();
+                    colorCtx.moveTo(l.x, l.y);
+                    colorCtx.lineTo(p.x, p.y);
+                    colorCtx.stroke();
+                }
             }
         }
-        love.graphics.setColor(255, 255, 255, 255);
+    }
+
+    // Método auxiliar para compatibilidade com código antigo
+    function drawSingleContext(targetCtx, obstacles) {
+        for (const l of lights) {
+            if (!l.enabled) continue;
+
+            const rays = buildRayPolygon(l, obstacles);
+            if (rays.length < 3) continue;
+
+            const flatRays = rays.flatMap(p => [p.x, p.y]);
+            if (flatRays.length >= 6) {
+                targetCtx.fillStyle = `rgba(${l.color.r}, ${l.color.g}, ${l.color.b}, ${l.color.a})`;
+                targetCtx.beginPath();
+                targetCtx.moveTo(flatRays[0], flatRays[1]);
+                for (let i = 2; i < flatRays.length; i += 2) {
+                    targetCtx.lineTo(flatRays[i], flatRays[i + 1]);
+                }
+                targetCtx.closePath();
+                targetCtx.fill();
+            }
+
+            if (l.showRays) {
+                targetCtx.strokeStyle = `rgba(${l.color.r}, ${l.color.g}, ${l.color.b}, 0.47)`;
+                targetCtx.lineWidth = 1;
+                for (const p of rays) {
+                    targetCtx.beginPath();
+                    targetCtx.moveTo(l.x, l.y);
+                    targetCtx.lineTo(p.x, p.y);
+                    targetCtx.stroke();
+                }
+            }
+        }
     }
 
     /** Gera vértices do polígono de luz considerando retângulos e círculos */
@@ -128,9 +206,11 @@ export const lightShadow = (function () {
         const s_dx = p2.x - p1.x,
             s_dy = p2.y - p1.y;
         const denom = s_dx * r_dy - s_dy * r_dx;
-        if (denom === 0) return null; // paralelos
+        if (Math.abs(denom) < 0.0001) return null; // paralelos ou quase
         const T2 = (r_dx * (s_py - r_py) + r_dy * (r_px - s_px)) / denom;
-        const T1 = (s_px + s_dx * T2 - r_px) / r_dx;
+        const T1 = Math.abs(r_dx) > 0.0001 
+            ? (s_px + s_dx * T2 - r_px) / r_dx 
+            : (s_py + s_dy * T2 - r_py) / r_dy;
         if (T1 < 0 || T2 < 0 || T2 > 1) return null;
         return { x: r_px + r_dx * T1, y: r_py + r_dy * T1 };
     }
@@ -149,5 +229,23 @@ export const lightShadow = (function () {
         return { x: rx + dx * tHit, y: ry + dy * tHit };
     }
 
-    return { newLight, update, draw, getLights: () => lights };
+    function removeLight(light) {
+        const index = lights.indexOf(light);
+        if (index > -1) {
+            lights.splice(index, 1);
+        }
+    }
+
+    function clear() {
+        lights.length = 0;
+    }
+
+    return { 
+        newLight, 
+        update, 
+        draw, 
+        removeLight, 
+        clear,
+        getLights: () => lights 
+    };
 })();

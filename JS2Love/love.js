@@ -1,3 +1,4 @@
+
 // Love2D JavaScript Engine
 class Love2D {
   constructor(width = 640, height = 320) {
@@ -237,6 +238,30 @@ const love = {
       return engine.height;
     },
 
+    getContext: function () {
+      return engine.ctx;
+    },
+
+    setBlendMode: function (mode) {
+      if (mode === 'alpha') {
+        engine.ctx.globalCompositeOperation = 'source-over';
+      } else if (mode === 'add') {
+        engine.ctx.globalCompositeOperation = 'lighter';
+      } else if (mode === 'subtract') {
+        engine.ctx.globalCompositeOperation = 'difference';
+      } else if (mode === 'multiply') {
+        engine.ctx.globalCompositeOperation = 'multiply';
+      } else if (mode === 'screen') {
+        engine.ctx.globalCompositeOperation = 'screen';
+      } else {
+        engine.ctx.globalCompositeOperation = mode;
+      }
+    },
+
+    getBlendMode: function () {
+      return engine.ctx.globalCompositeOperation;
+    },
+
     newImage: function (src) {
       if (imageCache.has(src)) {
         return imageCache.get(src);
@@ -417,6 +442,9 @@ const love = {
 
 // Initialize engine
 const engine = new Love2D(window.CANVAS_WIDTH || 640, window.CANVAS_HEIGHT || 320);
+
+// Export engine to global scope for modules
+window.engine = engine;
 
 // Export love object to global scope
 window.love = window.love || {};
