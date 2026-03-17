@@ -6,6 +6,7 @@ import { particles } from './JS2Love/modules/particles.js';
 import { dynamicLight } from './JS2Love/modules/DynamicLight.js';
 import { light } from './JS2Love/modules/light.js';
 import { screenDarkness } from './JS2Love/modules/screenDarkness.js';
+import { camera } from './JS2Love/modules/camera.js';
 
 window.onload = (e) => {
     physics.init(0, 1);
@@ -76,6 +77,11 @@ window.onload = (e) => {
         
         // Define a intensidade da escuridão ANTES de usar
         screenDarkness.set(0.9);
+        
+        // Configuração da câmera (plug-and-play!)
+        // Não precisa mais de setScreenSize - detecta automaticamente!
+        camera.follow(p);
+        camera.setSmoothness(5);
     }
 
     window.love.keypressed = function (key) {
@@ -83,6 +89,18 @@ window.onload = (e) => {
             p.dobleJump();
             emmiter.x = p.body.x + p.body.width / 2
             emmiter.y = p.body.y + p.body.height / 2
+            camera.shake(5, 0.3); // Shake ao pular
+        }
+        
+        // Controles de câmera
+        if (key == 'q') {
+            camera.shake(10, 0.5);
+        }
+        if (key == '=') {
+            camera.setZoom(camera.getZoom() + 0.2);
+        }
+        if (key == '-') {
+            camera.setZoom(camera.getZoom() - 0.2);
         }
         
         // Só muda para animação de correr se pressionar teclas de movimento
@@ -114,6 +132,7 @@ window.onload = (e) => {
 
     window.love.update = function (dt) {
         physics.update(dt);
+        camera.update(dt);
 
         p.update(dt);
         particles.update(dt)
@@ -130,21 +149,21 @@ window.onload = (e) => {
 
         love.graphics.setColor(233, 150, 84);
         love.graphics.circle('fill', b.x + b.width / 2, b.y + b.height / 2, b.radius);
-
+        
         p.draw();
-
         particles.draw()
     }
 
     window.love.draw = function () {
-        /* ---  PASSO 1: Desenhe o mundo normalmente --- */
-        worldDraw();   // plataformas, player, partículas, etc.
-        
+        // Aplica a câmera ao mundo (automático nos offscreen também!)
+        camera.attach();
+        worldDraw();
+        camera.detach();
         
         /* ---  PASSO 2: Crie a máscara de luz offscreen --- */
         screenDarkness.beginLightMask();
         
-        // Obtém os dois contextos (sombra e cor)
+        // Obtém os dois contextos (sombra e cor) - já com transformação da câmera!
         const shadowCtx = screenDarkness.getShadowContext();
         const colorCtx = screenDarkness.getLightColorContext();
         
@@ -154,12 +173,14 @@ window.onload = (e) => {
         
         /* ---  PASSO 3: Aplica ambas as camadas sobre o mundo --- */
         screenDarkness.endLightMask();
+
+        /* --- UI (sem câmera) --- */
+        love.graphics.setColor(255, 255, 255);
+        love.graphics.print('Controles: A/D = mover, W = pular, Q = shake, +/- = zoom', 10, 10);
     }
 
     // Initialize the game
     if (window.love.load) {
-        window.love.load();
-    } else {
         window.love.load();
     }
 }

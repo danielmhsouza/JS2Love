@@ -53,6 +53,12 @@ export const screenDarkness = (function () {
     // Limpa o canvas de cores
     lightColorCtx.clearRect(0, 0, lightColorCanvas.width, lightColorCanvas.height);
     lightColorCtx.globalCompositeOperation = 'source-over';
+    
+    // Aplica transformações da câmera nos canvas offscreen (se existir)
+    if (window.camera) {
+      window.camera.applyTransformTo(shadowCtx);
+      window.camera.applyTransformTo(lightColorCtx);
+    }
   }
 
   /** 
@@ -61,6 +67,12 @@ export const screenDarkness = (function () {
    */
   function endLightMask() {
     if (!shadowCanvas) return;
+    
+    // Remove transformações da câmera (se existir)
+    if (window.camera) {
+      window.camera.removeTransformFrom(shadowCtx);
+      window.camera.removeTransformFrom(lightColorCtx);
+    }
     
     // Restaura blend modes dos canvas offscreen
     shadowCtx.globalCompositeOperation = 'source-over';
